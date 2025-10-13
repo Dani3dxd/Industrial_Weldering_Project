@@ -1,123 +1,190 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.ProBuilder;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class PreviewZone : MonoBehaviour
 {
-    public Transform[] placementPoints; // Asignados en el inspector
-    public List<Transform> availablePoints;
-    public GameObject previewPrefab;
-    public GameObject interactablePrefab; // Objeto original para instanciar
+    public enum ZonePosition { Izquierda, Centro, Derecha }
+
+    [Header("Configuración de zona")]
+    public ZonePosition posicionZona = ZonePosition.Centro;
+
+    [Header("Punto de colocación (si no se asigna, usa el transform de este GameObject)")]
+    [SerializeField] private Transform placementPoint;
+
+    [Header("Prefabs de figuras (definitivas)")]
+    public GameObject cuadradoPrefab;
+    public GameObject paralelogramoPrefab;
+    public GameObject trianguloPrefab;
+
+    [Header("Prefabs de previsualización")]
+    public GameObject cuadradoPreview;
+    public GameObject paralelogramoPreview;
+    public GameObject trianguloPreview;
+
     private GameObject currentPreview;
+    private XRGrabInteractable currentInteractable;
     private bool isInside = false;
-    private UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable currentInteractable;
+
+    // Referencia global (o compartida) que indica qué figura hay en el centro.
+    public static string figuraCentral = "";
 
     private void Start()
     {
-        availablePoints = new List<Transform>(placementPoints);
+        if (placementPoint == null)
+            placementPoint = transform;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Interactable") && currentPreview == null && availablePoints.Count > 0)
-        {
-            // Usar pr�xima posici�n libre
-            Transform nextPoint = availablePoints[0];
+        if (!other.CompareTag("Interactable") || currentPreview != null) return;
 
-            currentPreview = Instantiate(previewPrefab, nextPoint.position, nextPoint.rotation);
-            currentInteractable = other.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+        string shapeType = GetShapeType(other.gameObject);
+        if (!IsValidPlacement(shapeType)) return;
 
+        GameObject previewPrefab = GetPreviewPrefabByType(shapeType);
+        if (previewPrefab == null) return;
+
+        // Instanciar preview con la rotación correcta desde el inicio
+        Quaternion previewRot = GetRotationForType(shapeType);
+        currentPreview = Instantiate(previewPrefab, placementPoint.position, previewRot);
+
+        currentInteractable = other.GetComponent<XRGrabInteractable>();
+        if (currentInteractable != null)
             currentInteractable.selectExited.AddListener(OnReleasedInside);
-            isInside = true;
+
+        isInside = true;
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (currentInteractable == null || other.gameObject != currentInteractable.gameObject) return;
+        if (currentPreview != null)
+        {
+            // Mantener preview en el punto y con la rotación actualizada (por si cambia figuraCentral mientras se arrastra)
+            string shapeType = GetShapeType(currentInteractable.gameObject);
+            currentPreview.transform.position = placementPoint.position;
+            currentPreview.transform.rotation = GetRotationForType(shapeType);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Interactable"))
-        {
-            if (currentPreview != null) Destroy(currentPreview);
-            if (currentInteractable != null)
-                currentInteractable.selectExited.RemoveListener(OnReleasedInside);
+        if (!other.CompareTag("Interactable")) return;
 
-            currentPreview = null;
-            currentInteractable = null;
-            isInside = false;
-        }
-    }
+        if (currentPreview != null) Destroy(currentPreview);
+        if (currentInteractable != null)
+            currentInteractable.selectExited.RemoveListener(OnReleasedInside);
 
-    private void OnTriggerStay(Collider other)
-    {
-        // Verificamos si el objeto que está dentro es el actual interactable
-        if (currentInteractable == null || other.gameObject != currentInteractable.gameObject) return;
-
-        // Actualizamos el preview a la posición más cercana del objeto
-        UpdatePreviewPosition(other.transform);
-    }
-
-    private void UpdatePreviewPosition(Transform draggingTransform)
-    {
-        if (availablePoints.Count == 0 || currentPreview == null) return;
-
-        Vector3 dragPos = draggingTransform.position;
-        Transform closestPoint = null;
-        float minDistance = Mathf.Infinity;
-
-        foreach (Transform point in availablePoints)
-        {
-            float dist = Vector3.Distance(dragPos, point.position);
-            if (dist < minDistance)
-            {
-                minDistance = dist;
-                closestPoint = point;
-            }
-        }
-
-        if (closestPoint == null) return;
-
-        // Posicionar el preview en el punto más cercano
-        currentPreview.transform.position = closestPoint.position;
-        currentPreview.transform.rotation = closestPoint.rotation;
+        currentPreview = null;
+        currentInteractable = null;
+        isInside = false;
     }
 
     private void OnReleasedInside(SelectExitEventArgs args)
     {
         if (!isInside || currentPreview == null || currentInteractable == null) return;
-        if (availablePoints.Count == 0) return;
 
-        // 1. Obtener posición de soltado
-        Vector3 releasePosition = args.interactorObject.transform.position;
+        string shapeType = GetShapeType(currentInteractable.gameObject);
+        if (!IsValidPlacement(shapeType)) return;
 
-        // 2. Buscar el punto más cercano
-        Transform closestPoint = null;
-        float minDistance = Mathf.Infinity;
+        Quaternion finalRotation = GetRotationForType(shapeType);
 
-        foreach (Transform point in availablePoints)
-        {
-            float dist = Vector3.Distance(releasePosition, point.position);
-            if (dist < minDistance)
-            {
-                minDistance = dist;
-                closestPoint = point;
-            }
-        }
+        GameObject prefabToPlace = GetPrefabByType(shapeType);
+        if (prefabToPlace == null) return;
 
-        if (closestPoint == null) return;
+        Instantiate(prefabToPlace, placementPoint.position, finalRotation);
 
-        // 3. Instanciar y ocupar el punto
-        GameObject placedObject = Instantiate(interactablePrefab, closestPoint.position, closestPoint.rotation);
-        availablePoints.Remove(closestPoint);
+        if (posicionZona == ZonePosition.Centro)
+            figuraCentral = shapeType; // Actualizar quién está en el centro
 
-        // 4. Eliminar objetos antiguos
         currentInteractable.selectExited.RemoveListener(OnReleasedInside);
         Destroy(currentInteractable.gameObject);
-        if (currentPreview != null) Destroy(currentPreview);
+        Destroy(currentPreview);
 
-        // 5. Resetear estado
         currentInteractable = null;
         currentPreview = null;
         isInside = false;
     }
 
+    // --- Lógica de rotación según la zona y la figura central ---
+    private Quaternion GetRotationForType(string shapeType)
+    {
+        Quaternion baseRot = placementPoint.rotation;
+        float angleY = 0f;
+
+        if (shapeType == "Triangle")
+        {
+            // Triángulo tiene rotaciones condicionales según zona y figura central
+            if (posicionZona == ZonePosition.Izquierda)
+            {
+                if (figuraCentral == "Parallelogram") angleY = 0;
+                else if (figuraCentral == "Cube") angleY = 90f;
+            }
+            else if (posicionZona == ZonePosition.Derecha)
+            {
+                if (figuraCentral == "Parallelogram") angleY = 180f;
+                else if (figuraCentral == "Cube") angleY = 0f;
+            }
+            // En Centro no se coloca triángulo según reglas, pero si llegase, angleZ = 0
+        }
+        // Cuadrado y Paralelogramo mantienen la rotación base
+        return baseRot * Quaternion.Euler(0f, angleY, 0);
+    }
+
+    // --- Utilidades ---
+    private string GetShapeType(GameObject obj)
+    {
+        string name = obj.name.ToLower();
+        if (name.Contains("cube") || name.Contains("cube")) return "Cube";
+        if (name.Contains("triangle") || name.Contains("triangle")) return "Triangle";
+        if (name.Contains("parallelogram") || name.Contains("parallelogram")) return "Parallelogram";
+        return "";
+    }
+
+    private GameObject GetPrefabByType(string type)
+    {
+        switch (type)
+        {
+            case "Cube": return cuadradoPrefab;
+            case "Triangle": return trianguloPrefab;
+            case "Parallelogram": return paralelogramoPrefab;
+            default: return null;
+        }
+    }
+
+    private GameObject GetPreviewPrefabByType(string type)
+    {
+        switch (type)
+        {
+            case "Cube": return cuadradoPreview;
+            case "Triangle": return trianguloPreview;
+            case "Parallelogram": return paralelogramoPreview;
+            default: return null;
+        }
+    }
+
+    private bool IsValidPlacement(string type)
+    {
+        switch (posicionZona)
+        {
+            case ZonePosition.Centro:
+                return (type == "Cube" || type == "Parallelogram");
+
+            case ZonePosition.Izquierda:
+                if (figuraCentral == "Parallelogram") return (type == "Triangle");
+                if (figuraCentral == "Cube") return (type == "Cube" || type == "Triangle");
+                return false;
+
+            case ZonePosition.Derecha:
+                if (figuraCentral == "Parallelogram") return (type == "Triangle");
+                if (figuraCentral == "Cube") return (type == "Cube" || type == "Triangle");
+                return false;
+        }
+        return false;
+    }
 }
