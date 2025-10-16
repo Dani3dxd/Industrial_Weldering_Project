@@ -5780,6 +5780,7 @@ MonoBehaviour:
   lr: {fileID: 1280709585}
   sphere: {fileID: 4266025087849063666, guid: 1dc01785522d8634ebb990a91e0eedb2, type: 3}
   spherePosition: {fileID: 786781902}
+  drawObject: 0
 --- !u!114 &1280709584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5828,7 +5829,7 @@ LineRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1280709581}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -5867,13 +5868,13 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.01
+    widthMultiplier: 0.0005
     widthCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.2657528
+        value: 0.4012947
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -5885,7 +5886,7 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.5294118, g: 1, b: 0, a: 1}
+      key0: {r: 0.9924528, g: 0, b: 0, a: 1}
       key1: {r: 1, g: 1, b: 1, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
