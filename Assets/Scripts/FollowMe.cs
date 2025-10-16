@@ -9,6 +9,12 @@ public class FollowMe : MonoBehaviour
     void Update()
     {
         if (objetoASeguir != null)
+        {
             transform.position = objetoASeguir.position;
+            transform.rotation = objetoASeguir.rotation;
+        }
+
     }
 }
+
+
