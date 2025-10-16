@@ -1,15 +1,10 @@
 diff a/Assets/Tutorial.unity b/Assets/Tutorial.unity	(rejected hunks)
-@@ -152,12 +152,11 @@
-   m_LocalScale: {x: 1, y: 1, z: 1}
-   m_ConstrainProportionsScale: 0
-   m_Children:
-+  - {fileID: 1271024986}
-   - {fileID: 1714999947}
--  - {fileID: 1282680933}
-   - {fileID: 1457937698}
-   - {fileID: 912920208}
-   - {fileID: 1133325670}
--  - {fileID: 574031855}
-   - {fileID: 1940023771}
-   - {fileID: 148879795}
-   - {fileID: 1425454521}
+@@ -38,7 +38,7 @@
+   m_ReflectionIntensity: 1
+   m_CustomReflection: {fileID: 0}
+   m_Sun: {fileID: 0}
+-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
++  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+   m_UseRadianceAmbientProbe: 0
+ --- !u!157 &3
+ LightmapSettings:
