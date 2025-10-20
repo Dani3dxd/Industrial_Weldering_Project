@@ -1,25 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class SetPoint : MonoBehaviour
 {
     [Header("Render Line Settings")]
-    [SerializeField] private LineRenderer lr; //load the component linerenderer at scene
+    [SerializeField] private LineRenderer baseLine; //load the base component of line trajectory
     [SerializeField] private GameObject sphere; //load the prefab for this case a sphere
-    [SerializeField] private Transform spherePosition;
-    [SerializeField] private bool drawObject = true; //boolean to draw or not the line
+    [SerializeField] private Transform endEffector;//load transform of the end effector object
 
+    [SerializeField] private bool drawObject = true; //boolean to draw or not the line
+   
     private GameObject newSphere;
     private List<GameObject> points = new List<GameObject>();
     private void Start()
     {
-        // Oculta o muestra el LineRenderer
-        if (lr != null)
-            lr.enabled = drawObject;
+        // Show or hide the LineRenderer
+        if (baseLine != null)
+            baseLine.enabled = drawObject;
 
-        // Oculta o muestra todas las esferas instanciadas
+        // Show or hide the instantiate spheres
         foreach (var point in points)
         {
             if (point != null)
@@ -33,12 +36,13 @@ public class SetPoint : MonoBehaviour
     {
         if (drawObject)
         {
-            newSphere = Instantiate(sphere, spherePosition.transform.position, Quaternion.identity); //instance a new object taken the prefab that you load it before with a position and rotation stablished previously
+            newSphere = Instantiate(sphere, endEffector.transform.position, Quaternion.identity); //instance a new object taken the prefab that you load it before with a position and rotation stablished previously
             points.Add(newSphere); // add a new object at list
-            lr.positionCount = points.Count; //stablished the quantity of points created in scene
-            for (int index = 0; index < lr.positionCount; index++)
-                lr.SetPosition(index, points[index].transform.position); // run the array and position points on stablished positions
+            baseLine.positionCount = points.Count; //stablished the quantity of points created in scene
+            for (int index = 0; index < baseLine.positionCount; index++)
+                baseLine.SetPosition(index, points[index].transform.position); // run the array and position points on stablished positions
         }
+        
     }
 
     /// <summary>
@@ -50,6 +54,6 @@ public class SetPoint : MonoBehaviour
             GameObject.Destroy(points[i]);
         for (int i = 0; i < points.Count; i++)
             points.Clear();
-        lr.positionCount = 0;
-    }
+        baseLine.positionCount = 0;
+    }    
 }

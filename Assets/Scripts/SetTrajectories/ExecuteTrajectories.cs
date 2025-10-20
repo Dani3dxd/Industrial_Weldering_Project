@@ -7,23 +7,34 @@ using UnityEngine.ProBuilder.Shapes;
 public class ExecuteTrajectories : MonoBehaviour
 {
     [Header("Trajectories Settings")]
-    [SerializeField] private GameObject axis = new GameObject();
+    [SerializeField] private GameObject axis;
     [SerializeField] private float trajectoriesDuration = 10f; // time between a execute articulation and the next one
     [SerializeField] private AnimationCurve curve; //animation curve to simulate a smooth movement
 
     //List trajectories for each articulation
     [SerializeField] private List<Vector3> rotation = new List<Vector3>();
     [SerializeField] private List<Vector3> trajectory = new List<Vector3>();
+    
+    [SerializeField] private LineRenderer welderLine; //load render line for welder
+    [SerializeField] private Transform endEffector; //load transform of the end effector object
+    [SerializeField] private ParticleSystem sparkEffect; // load sparkeffect for weldering system
+    [SerializeField] private List<Vector3> points = new List<Vector3>();
 
     private int trajectoryCount=0;
-    
+
     /// <summary>
     /// When press the button this function allows to program save current angle for each articulation
     /// </summary>
+    private void Start()
+    {
+        welderLine.enabled = false;
+        sparkEffect=Instantiate(sparkEffect);
+    }
     public void ListMovements()
     {       
         trajectory.Add(axis.transform.localPosition);
         rotation.Add(axis.transform.localEulerAngles);
+        points.Add(endEffector.position);
         trajectoryCount++;
     }
 
@@ -35,6 +46,7 @@ public class ExecuteTrajectories : MonoBehaviour
     
         trajectory.Clear();
         rotation.Clear();
+        points.Clear();
         trajectoryCount = 0;
     }
 
@@ -50,6 +62,10 @@ public class ExecuteTrajectories : MonoBehaviour
     {        
         float timeElapsed = 0f;
         int currentTrajectoryIndex = 0;
+        welderLine.enabled = true;
+        welderLine.positionCount = 2;
+        welderLine.SetPosition(currentTrajectoryIndex, points[currentTrajectoryIndex]);
+        sparkEffect.Play();
         while (currentTrajectoryIndex < trajectoryCount-1)
         {
             
@@ -60,11 +76,16 @@ public class ExecuteTrajectories : MonoBehaviour
             {
                 currentTrajectoryIndex++;
                 timeElapsed = 0f;
+                if (currentTrajectoryIndex <= trajectoryCount-2)
+                    welderLine.positionCount++;
             }
-
-            
+            if (Vector3.Distance(axis.transform.position, points[currentTrajectoryIndex]) > 0.1f && timeElapsed > 0.1f)                
+                welderLine.SetPosition(currentTrajectoryIndex+1,endEffector.position);
+            sparkEffect.transform.position = endEffector.position;
             yield return null;
         }
+        //welderLine.enabled = false;
+        sparkEffect.Stop();
     }
 
     
