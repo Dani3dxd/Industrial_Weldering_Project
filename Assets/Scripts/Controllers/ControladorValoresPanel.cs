@@ -13,17 +13,20 @@ public class ControladorValoresPanel : MonoBehaviour
         public XRSlider valorSlider;
         public TMP_Text valorTexto;
         public float multiplicador = 1f;
+        public string unidad;
     }
 
     [Header("Referencias")]
-    [SerializeField] private List<VariablesDisplay> valorDisplay = new();
+    [SerializeField] public List<VariablesDisplay> valorDisplay = new();
 
     void Start()
     {
         foreach (var v in valorDisplay)
+        {
             if (v.valorSlider && v.valorTexto)
-                v.valorSlider.onValueChange.AddListener(val =>
-                    v.valorTexto.text = $"{val * v.multiplicador:F1}");
+                v.valorSlider.onValueChange.AddListener(val => v.valorTexto.text = $"{val * v.multiplicador:F1} {v.unidad}");
+            v.valorTexto.text = $"0.0 {v.unidad}";
+        }
     }
 
     void OnDestroy()

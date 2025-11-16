@@ -15,26 +15,17 @@ public class ExecuteTrajectories : MonoBehaviour
     [SerializeField] private List<Vector3> rotation = new List<Vector3>();
     [SerializeField] private List<Vector3> trajectory = new List<Vector3>();
     
-    [SerializeField] private LineRenderer welderLine; //load render line for welder
-    [SerializeField] private Transform endEffector; //load transform of the end effector object
-    [SerializeField] private ParticleSystem sparkEffect; // load sparkeffect for weldering system
-    [SerializeField] private List<Vector3> points = new List<Vector3>();
-
     private int trajectoryCount=0;
 
     /// <summary>
     /// When press the button this function allows to program save current angle for each articulation
     /// </summary>
-    private void Start()
-    {
-        welderLine.enabled = false;
-        sparkEffect=Instantiate(sparkEffect);
-    }
+    
     public void ListMovements()
     {       
         trajectory.Add(axis.transform.localPosition);
         rotation.Add(axis.transform.localEulerAngles);
-        points.Add(endEffector.position);
+        
         trajectoryCount++;
     }
 
@@ -46,7 +37,7 @@ public class ExecuteTrajectories : MonoBehaviour
     
         trajectory.Clear();
         rotation.Clear();
-        points.Clear();
+        
         trajectoryCount = 0;
     }
 
@@ -56,36 +47,30 @@ public class ExecuteTrajectories : MonoBehaviour
     public void ExecuteMovement()
     {
         if (trajectory.Count>=2)
-            StartCoroutine(AngularAxisMovement(trajectoriesDuration));
+            StartCoroutine(AngularAxisMovement());
     }
-    IEnumerator AngularAxisMovement(float totalTime)
+    IEnumerator AngularAxisMovement()
     {        
         float timeElapsed = 0f;
         int currentTrajectoryIndex = 0;
-        welderLine.enabled = true;
-        welderLine.positionCount = 2;
-        welderLine.SetPosition(currentTrajectoryIndex, points[currentTrajectoryIndex]);
-        sparkEffect.Play();
+        float totalTime = 15f * Vector3.Distance(trajectory[currentTrajectoryIndex], trajectory[currentTrajectoryIndex + 1]); // adjust time according to distance between points
+
         while (currentTrajectoryIndex < trajectoryCount-1)
         {
-            
+            trajectoriesDuration = totalTime;
             axis.transform.localPosition= Vector3.Lerp(trajectory[currentTrajectoryIndex], trajectory[currentTrajectoryIndex + 1], curve.Evaluate(timeElapsed / totalTime));
             axis.transform.localRotation = Quaternion.Lerp(Quaternion.Euler(rotation[currentTrajectoryIndex]), Quaternion.Euler(rotation[currentTrajectoryIndex + 1]), curve.Evaluate(timeElapsed / totalTime));
             timeElapsed += Time.deltaTime;
             if (timeElapsed >= totalTime || Vector3.Distance(axis.transform.localPosition, trajectory[currentTrajectoryIndex + 1]) < 0.001f && Quaternion.Angle(axis.transform.localRotation, Quaternion.Euler(rotation[currentTrajectoryIndex + 1])) < 0.1f)
             {
+                Debug.Log(Vector3.Distance(axis.transform.localPosition, trajectory[currentTrajectoryIndex + 1]));
                 currentTrajectoryIndex++;
                 timeElapsed = 0f;
-                if (currentTrajectoryIndex <= trajectoryCount-2)
-                    welderLine.positionCount++;
+                if (currentTrajectoryIndex < trajectoryCount - 1)
+                    totalTime = 15f * Vector3.Distance(trajectory[currentTrajectoryIndex], trajectory[currentTrajectoryIndex + 1]);
             }
-            if (Vector3.Distance(axis.transform.position, points[currentTrajectoryIndex]) > 0.1f && timeElapsed > 0.1f)                
-                welderLine.SetPosition(currentTrajectoryIndex+1,endEffector.position);
-            sparkEffect.transform.position = endEffector.position;
             yield return null;
         }
-        //welderLine.enabled = false;
-        sparkEffect.Stop();
     }
 
     
