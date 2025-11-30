@@ -8,7 +8,6 @@ public class ExecuteTrajectories : MonoBehaviour
 {
     [Header("Trajectories Settings")]
     [SerializeField] private GameObject axis;
-    [SerializeField] private float trajectoriesDuration = 10f; // time between a execute articulation and the next one
     [SerializeField] private AnimationCurve curve; //animation curve to simulate a smooth movement
 
     //List trajectories for each articulation
@@ -57,13 +56,12 @@ public class ExecuteTrajectories : MonoBehaviour
 
         while (currentTrajectoryIndex < trajectoryCount-1)
         {
-            trajectoriesDuration = totalTime;
             axis.transform.localPosition= Vector3.Lerp(trajectory[currentTrajectoryIndex], trajectory[currentTrajectoryIndex + 1], curve.Evaluate(timeElapsed / totalTime));
             axis.transform.localRotation = Quaternion.Lerp(Quaternion.Euler(rotation[currentTrajectoryIndex]), Quaternion.Euler(rotation[currentTrajectoryIndex + 1]), curve.Evaluate(timeElapsed / totalTime));
             timeElapsed += Time.deltaTime;
             if (timeElapsed >= totalTime || Vector3.Distance(axis.transform.localPosition, trajectory[currentTrajectoryIndex + 1]) < 0.001f && Quaternion.Angle(axis.transform.localRotation, Quaternion.Euler(rotation[currentTrajectoryIndex + 1])) < 0.1f)
             {
-                Debug.Log(Vector3.Distance(axis.transform.localPosition, trajectory[currentTrajectoryIndex + 1]));
+                Debug.Log("Tiempo Total trayectoria: "+totalTime);
                 currentTrajectoryIndex++;
                 timeElapsed = 0f;
                 if (currentTrajectoryIndex < trajectoryCount - 1)

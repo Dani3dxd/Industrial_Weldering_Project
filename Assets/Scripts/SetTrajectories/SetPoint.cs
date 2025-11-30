@@ -20,6 +20,7 @@ public class SetPoint : MonoBehaviour
     [SerializeField] private float widthLine = 0.02f; //width of the line
     [SerializeField, Range(0, 20)] private float colorLine; //color of the line
     [SerializeField] private ControladorValoresPanel controlPanel;
+    [SerializeField] private AudioSource weldingSound;
 
     private List<GameObject> points = new List<GameObject>();
     private GameObject newSphere;
@@ -33,13 +34,25 @@ public class SetPoint : MonoBehaviour
         controlPanel.GetComponentInChildren<ControladorValoresPanel>().valorDisplay[0].valorSlider.onValueChange.AddListener( val =>
             {
                 widthLine = Mathf.InverseLerp(0f, 120f, val*120f) * 0.04f;
-                welderLine.startWidth = widthLine; welderLine.endWidth = widthLine;
+                welderLine.startWidth = widthLine; 
+                welderLine.endWidth = widthLine;
             }
         );
         controlPanel.GetComponentInChildren<ControladorValoresPanel>().valorDisplay[1].valorSlider.onValueChange.AddListener( val =>
             {
-                colorLine = Mathf.InverseLerp(0f, 20f, val*20f);
-                welderLine.material.color = Color.Lerp(Color.yellow, Color.red, colorLine);
+                Color Blend(Color c1, Color c2, float st, float end, float v)
+                {
+                    return Color.Lerp(c1, c2, Mathf.InverseLerp(st, end, v));
+                }
+                float valueAmpLine = val*20f;
+                Color finalColor;
+
+                if (valueAmpLine <= 5f) finalColor = Blend(Color.white, Color.yellow, 0f, 5f, valueAmpLine);
+                else if (valueAmpLine <= 10f) finalColor = Blend(Color.yellow, Color.gray, 5f, 10f, valueAmpLine);
+                else if (valueAmpLine <= 15f) finalColor = Blend(Color.gray, new Color(1f, 0.5f, 0f), 10f, 15f, valueAmpLine);
+                else finalColor = Blend(new Color(1f, 0.5f, 0f), Color.red, 15f, 20f, valueAmpLine);
+
+                welderLine.material.color = finalColor;
             }
         );
     }
@@ -77,23 +90,24 @@ public class SetPoint : MonoBehaviour
     {
         float timeElapsed = 0f;
         int currentIndex = 0;
-        float totalTime = 15f * Vector3.Distance(points[currentIndex].transform.position, points[currentIndex + 1].transform.position);
+        float totalTime = 12f * Vector3.Distance(points[currentIndex].transform.position, points[currentIndex + 1].transform.position);
         welderLine.enabled = true;
         welderLine.positionCount = 2;
         welderLine.SetPosition(currentIndex, points[currentIndex].transform.position);
         sparkEffect.Play();
+        weldingSound.Play();
         while (currentIndex < points.Count - 1)
         {
             timeElapsed += Time.deltaTime;
             if (timeElapsed >= totalTime)
             {
-                Debug.Log(totalTime);
+                Debug.Log("Tiempo total soldador: "+totalTime);
                 currentIndex++;
                 timeElapsed = 0f;
                 if (currentIndex <= points.Count - 2)
                     welderLine.positionCount++;
                 if (currentIndex < points.Count - 1)
-                    totalTime = 15f * Vector3.Distance(points[currentIndex].transform.position, points[currentIndex + 1].transform.position);
+                    totalTime = 12f * Vector3.Distance(points[currentIndex].transform.position, points[currentIndex + 1].transform.position);
             }
             if (Vector3.Distance(endEffector.transform.position, points[currentIndex].transform.position) > 0.01f && timeElapsed > 0.01f)
                 welderLine.SetPosition(currentIndex + 1, endEffector.position);
@@ -101,5 +115,6 @@ public class SetPoint : MonoBehaviour
             yield return null;
         }
         sparkEffect.Stop();
+        weldingSound.Stop();
     }
 }

@@ -2,7 +2,7 @@
 - Project name: Industrial_Weldering_Project
 - Unity version: Unity 2022.3.19f1
 - Active game object:
-  - Name: SodaCup_FY001 (24)
+  - Name: Puntos de Soldadura
   - Tag: Untagged
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
