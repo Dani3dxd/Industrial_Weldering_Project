@@ -13,6 +13,7 @@ public class SetPoint : MonoBehaviour
     [SerializeField] private bool drawObject = true; //boolean to draw or not the line
 
     [Header("Render Line Settings")]
+    [SerializeField] private LineRenderer initLine; //load an initial line renderer to copy its settings    
     [SerializeField] private LineRenderer welderLine; //load the base component of line trajectory
     [SerializeField] private ParticleSystem sparkEffect; // load sparkeffect for weldering system
 
@@ -36,6 +37,8 @@ public class SetPoint : MonoBehaviour
                 widthLine = Mathf.InverseLerp(0f, 120f, val*120f) * 0.04f;
                 welderLine.startWidth = widthLine; 
                 welderLine.endWidth = widthLine;
+                initLine.startWidth = widthLine-0.005f;
+                initLine.endWidth = widthLine-0.005f;
             }
         );
         controlPanel.GetComponentInChildren<ControladorValoresPanel>().valorDisplay[1].valorSlider.onValueChange.AddListener( val =>
@@ -66,7 +69,9 @@ public class SetPoint : MonoBehaviour
         foreach (var point in points)
             point.SetActive(drawObject);
         welderLine.positionCount = points.Count; //stablished the quantity of points created in scene
-   
+        initLine.positionCount = points.Count;
+        for (int index = 0; index < initLine.positionCount; index++)
+            initLine.SetPosition(index, points[index].transform.position); // run the array and position points on stablished positions
     }
 
     /// <summary>
@@ -78,6 +83,7 @@ public class SetPoint : MonoBehaviour
             GameObject.Destroy(points[i]);
             points.Clear();
         }
+        initLine.positionCount = 0;
         welderLine.positionCount = 0;
     }
 
@@ -109,7 +115,7 @@ public class SetPoint : MonoBehaviour
                 if (currentIndex < points.Count - 1)
                     totalTime = 12f * Vector3.Distance(points[currentIndex].transform.position, points[currentIndex + 1].transform.position);
             }
-            if (Vector3.Distance(endEffector.transform.position, points[currentIndex].transform.position) > 0.01f && timeElapsed > 0.01f)
+            if (Vector3.Distance(endEffector.transform.position, points[currentIndex].transform.position) > 0.001f && timeElapsed > 0.001f)
                 welderLine.SetPosition(currentIndex + 1, endEffector.position);
             sparkEffect.transform.position = endEffector.position;
             yield return null;
