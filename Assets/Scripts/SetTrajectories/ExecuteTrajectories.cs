@@ -11,9 +11,11 @@ public class ExecuteTrajectories : MonoBehaviour
     [SerializeField] private AnimationCurve curve; //animation curve to simulate a smooth movement
 
     //List trajectories for each articulation
-    [SerializeField] private List<Vector3> rotation = new List<Vector3>();
-    [SerializeField] private List<Vector3> trajectory = new List<Vector3>();
-    
+    [SerializeField] public List<Vector3> rotation = new List<Vector3>();
+    [SerializeField] public List<Vector3> trajectory = new List<Vector3>();
+    public float finalTime = 0f;
+    public List<float> partialTime;
+
     private int trajectoryCount=0;
 
     /// <summary>
@@ -53,19 +55,25 @@ public class ExecuteTrajectories : MonoBehaviour
         float timeElapsed = 0f;
         int currentTrajectoryIndex = 0;
         float totalTime = 15f * Vector3.Distance(trajectory[currentTrajectoryIndex], trajectory[currentTrajectoryIndex + 1]); // adjust time according to distance between points
-
+        partialTime.Add(totalTime);
         while (currentTrajectoryIndex < trajectoryCount-1)
         {
             axis.transform.localPosition= Vector3.Lerp(trajectory[currentTrajectoryIndex], trajectory[currentTrajectoryIndex + 1], curve.Evaluate(timeElapsed / totalTime));
             axis.transform.localRotation = Quaternion.Lerp(Quaternion.Euler(rotation[currentTrajectoryIndex]), Quaternion.Euler(rotation[currentTrajectoryIndex + 1]), curve.Evaluate(timeElapsed / totalTime));
             timeElapsed += Time.deltaTime;
+            
             if (timeElapsed >= totalTime || Vector3.Distance(axis.transform.localPosition, trajectory[currentTrajectoryIndex + 1]) < 0.001f && Quaternion.Angle(axis.transform.localRotation, Quaternion.Euler(rotation[currentTrajectoryIndex + 1])) < 0.1f)
             {
-                Debug.Log("Tiempo Total trayectoria: "+totalTime);
+                Debug.Log("Tiempo de la trayectoria no."+currentTrajectoryIndex+": "+totalTime);
+                finalTime += totalTime;
                 currentTrajectoryIndex++;
                 timeElapsed = 0f;
                 if (currentTrajectoryIndex < trajectoryCount - 1)
+                {
                     totalTime = 15f * Vector3.Distance(trajectory[currentTrajectoryIndex], trajectory[currentTrajectoryIndex + 1]);
+                    partialTime.Add(totalTime);
+ 
+                }
             }
             yield return null;
         }

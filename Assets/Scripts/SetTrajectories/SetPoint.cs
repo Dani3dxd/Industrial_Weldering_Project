@@ -79,10 +79,9 @@ public class SetPoint : MonoBehaviour
     /// </summary>
     public void CleanSpheres()
     {
-        for (int i = 0; i < points.Count; i++){
+        for (int i = 0; i <= points.Count; i++)
             GameObject.Destroy(points[i]);
-            points.Clear();
-        }
+        points.Clear();
         initLine.positionCount = 0;
         welderLine.positionCount = 0;
     }
