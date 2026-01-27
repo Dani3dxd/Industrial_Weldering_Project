@@ -14,6 +14,7 @@ public class ControladorValoresPanel : MonoBehaviour
         public TMP_Text valorTexto;
         public float multiplicador = 1f;
         public string unidad;
+        public float dato = 0f;
     }
 
     [Header("Referencias")]
@@ -24,7 +25,11 @@ public class ControladorValoresPanel : MonoBehaviour
         foreach (var v in valorDisplay)
         {
             if (v.valorSlider && v.valorTexto)
-                v.valorSlider.onValueChange.AddListener(val => v.valorTexto.text = $"{val * v.multiplicador:F1} {v.unidad}");
+                v.valorSlider.onValueChange.AddListener(val => 
+                { 
+                    v.valorTexto.text = $"{val * v.multiplicador:F1} {v.unidad}";
+                    v.dato = val * v.multiplicador;
+                });
             v.valorTexto.text = $"0.0 {v.unidad}";
         }
     }

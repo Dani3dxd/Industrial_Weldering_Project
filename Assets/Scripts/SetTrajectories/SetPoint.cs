@@ -22,7 +22,7 @@ public class SetPoint : MonoBehaviour
     [SerializeField, Range(0, 20)] private float colorLine; //color of the line
     [SerializeField] private ControladorValoresPanel controlPanel;
     [SerializeField] private AudioSource weldingSound;
-
+    
     private List<GameObject> points = new List<GameObject>();
     private GameObject newSphere;
     private void Start()

@@ -11,8 +11,12 @@ public class ExecuteTrajectories : MonoBehaviour
     [SerializeField] private AnimationCurve curve; //animation curve to simulate a smooth movement
 
     //List trajectories for each articulation
+    [Header("Ubication Points")]
     [SerializeField] public List<Vector3> rotation = new List<Vector3>();
     [SerializeField] public List<Vector3> trajectory = new List<Vector3>();
+    
+    [Header("Show Results")]
+    [SerializeField] public GameObject panelResults;
     public float finalTime = 0f;
     public List<float> partialTime;
 
@@ -75,11 +79,8 @@ public class ExecuteTrajectories : MonoBehaviour
  
                 }
             }
-            yield return null;
+            yield return null;   
         }
+        panelResults.SetActive(true);
     }
-
-    
-
-    
 }
