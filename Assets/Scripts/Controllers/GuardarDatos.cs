@@ -35,15 +35,15 @@ public class GuardarDatos : MonoBehaviour
         File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
         Debug.Log("Archivo CSV creado en: " + filePath);
     }
+    
     public void GuardarInformacion()
     {
-        
-        if (controlValoresPanel.valorDisplay[0].dato > 70f && controlValoresPanel.valorDisplay[0].dato < 90f && controlValoresPanel.valorDisplay[1].dato >= 10f && controlValoresPanel.valorDisplay[1].dato <= 15f)
-            textosDatos.text = "Tiempo total de ejecucion " + trayectoriasEjecutadas.finalTime.ToString("F2") + " seg \nCantidad de puntos utilizados " + trayectoriasEjecutadas.trajectory.Count;
+
+        if (controlValoresPanel.valorDisplay[0].dato > 75f && controlValoresPanel.valorDisplay[0].dato < 85f && controlValoresPanel.valorDisplay[1].dato >= 10f && controlValoresPanel.valorDisplay[1].dato <= 15f)
+            textosDatos.text = "Valor de voltaje de: " + controlValoresPanel.valorDisplay[0].valorTexto.text + " y corriente de:" + controlValoresPanel.valorDisplay[1].valorTexto.text;
         else
-            textosDatos.text = "Tiempo total de ejecucion " + trayectoriasEjecutadas.finalTime.ToString("F2") + " seg \n " +
-                "Valor de voltaje de:" + controlValoresPanel.valorDisplay[0].valorTexto.text + " y corriente de:" + controlValoresPanel.valorDisplay[1].valorTexto.text +
-                    "\nSe recomienda utilizar valores de: 80 V y 12 A\nCantidad de puntos utilizados " + trayectoriasEjecutadas.trajectory.Count;
+            textosDatos.text = "Valor de voltaje de: " + controlValoresPanel.valorDisplay[0].valorTexto.text + " y corriente de:" + controlValoresPanel.valorDisplay[1].valorTexto.text +
+                    "\nSe recomienda utilizar valores de: 80 V y 12 A";
         foreach (Transform contenedor in contenidoContainer)
             Destroy(contenedor.gameObject);
 
@@ -72,10 +72,14 @@ public class GuardarDatos : MonoBehaviour
         {
             //float tiempo = trayectoriasEjecutadas.partialTime[i];
             Vector3 pos = trayectoriasEjecutadas.trajectory[i];
-            sb.AppendLine($"{i} {pos.x:F4} {pos.y:F4} {pos.z:F4}");
+            sb.AppendLine($"{i+1}   {pos.x:F4} {pos.y:F4} {pos.z:F4}");
         }
         sb.AppendLine("TiempoTotalDeEjecucion: ");
         sb.AppendLine($"{trayectoriasEjecutadas.finalTime:F2}");
         File.AppendAllText(filePath, sb.ToString(), Encoding.UTF8);
+        Debug.Log("Trayectoria guardada en: " + filePath);
+        
+        trayectoriasEjecutadas.textoTiempo.text = "Datos guardados correctamente en:";
+        textosDatos.text = filePath;
     }
 }

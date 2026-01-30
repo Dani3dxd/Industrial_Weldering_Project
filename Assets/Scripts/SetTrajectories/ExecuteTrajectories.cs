@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.ProBuilder.Shapes;
 
@@ -17,6 +18,7 @@ public class ExecuteTrajectories : MonoBehaviour
     
     [Header("Show Results")]
     [SerializeField] public GameObject panelResults;
+    [SerializeField] public TMP_Text textoTiempo;
     public float finalTime = 0f;
     public List<float> partialTime;
 
@@ -82,5 +84,6 @@ public class ExecuteTrajectories : MonoBehaviour
             yield return null;   
         }
         panelResults.SetActive(true);
+        textoTiempo.text = "Tiempo total de ejecución: " + finalTime.ToString("F2") + " seg \nCantidad de puntos utilizados: " + trajectory.Count;
     }
 }
