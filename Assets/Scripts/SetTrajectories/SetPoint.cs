@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -37,8 +37,8 @@ public class SetPoint : MonoBehaviour
                 widthLine = Mathf.InverseLerp(0f, 120f, val*120f) * 0.04f;
                 welderLine.startWidth = widthLine; 
                 welderLine.endWidth = widthLine;
-                initLine.startWidth = widthLine-0.005f;
-                initLine.endWidth = widthLine-0.005f;
+                initLine.startWidth = widthLine-0.008f;
+                initLine.endWidth = widthLine-0.008f;
             }
         );
         controlPanel.GetComponentInChildren<ControladorValoresPanel>().valorDisplay[1].valorSlider.onValueChange.AddListener( val =>
@@ -50,10 +50,28 @@ public class SetPoint : MonoBehaviour
                 float valueAmpLine = val*20f;
                 Color finalColor;
 
-                if (valueAmpLine <= 5f) finalColor = Blend(Color.white, Color.yellow, 0f, 5f, valueAmpLine);
+                /*if (valueAmpLine <= 5f) finalColor = Blend(Color.white, Color.yellow, 0f, 5f, valueAmpLine);
                 else if (valueAmpLine <= 10f) finalColor = Blend(Color.yellow, Color.gray, 5f, 10f, valueAmpLine);
                 else if (valueAmpLine <= 15f) finalColor = Blend(Color.gray, new Color(1f, 0.5f, 0f), 10f, 15f, valueAmpLine);
-                else finalColor = Blend(new Color(1f, 0.5f, 0f), Color.red, 15f, 20f, valueAmpLine);
+                else finalColor = Blend(new Color(1f, 0.5f, 0f), Color.red, 15f, 20f, valueAmpLine);*/
+                if (valueAmpLine <= 3.33f)
+                    finalColor = Blend(new Color(0.56f, 0f, 1f), Color.blue, 0f, 3.33f, valueAmpLine);          // Violeta → Azul
+
+                else if (valueAmpLine <= 6.66f)
+                    finalColor = Blend(Color.blue, Color.cyan, 3.33f, 6.66f, valueAmpLine);                     // Azul → Cian
+
+                else if (valueAmpLine <= 10f)
+                    finalColor = Blend(Color.cyan, Color.green, 6.66f, 10f, valueAmpLine);                     // Cian → Verde
+
+                else if (valueAmpLine <= 13.33f)
+                    finalColor = Blend(Color.green, Color.yellow, 10f, 13.33f, valueAmpLine);                  // Verde → Amarillo
+
+                else if (valueAmpLine <= 16.66f)
+                    finalColor = Blend(Color.yellow, new Color(1f, 0.5f, 0f), 13.33f, 16.66f, valueAmpLine);    // Amarillo → Naranja
+
+                else
+                    finalColor = Blend(new Color(1f, 0.5f, 0f), Color.red, 16.66f, 20f, valueAmpLine);           // Naranja → Rojo
+
 
                 welderLine.material.color = finalColor;
             }

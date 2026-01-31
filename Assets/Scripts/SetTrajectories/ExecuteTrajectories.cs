@@ -57,7 +57,8 @@ public class ExecuteTrajectories : MonoBehaviour
             StartCoroutine(AngularAxisMovement());
     }
     IEnumerator AngularAxisMovement()
-    {        
+    {
+        finalTime = 0f;
         float timeElapsed = 0f;
         int currentTrajectoryIndex = 0;
         float totalTime = 15f * Vector3.Distance(trajectory[currentTrajectoryIndex], trajectory[currentTrajectoryIndex + 1]); // adjust time according to distance between points
