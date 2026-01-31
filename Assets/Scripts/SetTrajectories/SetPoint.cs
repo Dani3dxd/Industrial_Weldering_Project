@@ -19,10 +19,10 @@ public class SetPoint : MonoBehaviour
 
     [Header("Welding Settings")]
     [SerializeField] private float widthLine = 0.02f; //width of the line
-    [SerializeField, Range(0, 20)] private float colorLine; //color of the line
+    
     [SerializeField] private ControladorValoresPanel controlPanel;
     [SerializeField] private AudioSource weldingSound;
-    
+    [SerializeField] private Material[] colorLine; //color of the line
     private List<GameObject> points = new List<GameObject>();
     private GameObject newSphere;
     private void Start()
@@ -43,37 +43,16 @@ public class SetPoint : MonoBehaviour
         );
         controlPanel.GetComponentInChildren<ControladorValoresPanel>().valorDisplay[1].valorSlider.onValueChange.AddListener( val =>
             {
-                Color Blend(Color c1, Color c2, float st, float end, float v)
-                {
-                    return Color.Lerp(c1, c2, Mathf.InverseLerp(st, end, v));
-                }
-                float valueAmpLine = val*20f;
-                Color finalColor;
-
-                /*if (valueAmpLine <= 5f) finalColor = Blend(Color.white, Color.yellow, 0f, 5f, valueAmpLine);
-                else if (valueAmpLine <= 10f) finalColor = Blend(Color.yellow, Color.gray, 5f, 10f, valueAmpLine);
-                else if (valueAmpLine <= 15f) finalColor = Blend(Color.gray, new Color(1f, 0.5f, 0f), 10f, 15f, valueAmpLine);
-                else finalColor = Blend(new Color(1f, 0.5f, 0f), Color.red, 15f, 20f, valueAmpLine);*/
-                if (valueAmpLine <= 3.33f)
-                    finalColor = Blend(new Color(0.56f, 0f, 1f), Color.blue, 0f, 3.33f, valueAmpLine);          // Violeta → Azul
-
-                else if (valueAmpLine <= 6.66f)
-                    finalColor = Blend(Color.blue, Color.cyan, 3.33f, 6.66f, valueAmpLine);                     // Azul → Cian
-
-                else if (valueAmpLine <= 10f)
-                    finalColor = Blend(Color.cyan, Color.green, 6.66f, 10f, valueAmpLine);                     // Cian → Verde
-
-                else if (valueAmpLine <= 13.33f)
-                    finalColor = Blend(Color.green, Color.yellow, 10f, 13.33f, valueAmpLine);                  // Verde → Amarillo
-
-                else if (valueAmpLine <= 16.66f)
-                    finalColor = Blend(Color.yellow, new Color(1f, 0.5f, 0f), 13.33f, 16.66f, valueAmpLine);    // Amarillo → Naranja
-
-                else
-                    finalColor = Blend(new Color(1f, 0.5f, 0f), Color.red, 16.66f, 20f, valueAmpLine);           // Naranja → Rojo
-
-
-                welderLine.material.color = finalColor;
+                float valueAmpLine = val * 20f;
+                int index = Mathf.FloorToInt( Mathf.InverseLerp(0f,20f,valueAmpLine) * colorLine.Length );
+                index = Mathf.Clamp( index, 0, colorLine.Length - 1 );
+                welderLine.material = colorLine[index];
+                // 1 Violeta → Azul
+                // 2 Azul → Cian
+                // 3 Cian → Verde
+                // 4 Verde → Amarillo
+                // 5 Amarillo → Naranja
+                // 6 Naranja → Rojo
             }
         );
     }

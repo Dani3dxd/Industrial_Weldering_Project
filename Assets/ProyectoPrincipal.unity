@@ -27629,9 +27629,16 @@ MonoBehaviour:
   welderLine: {fileID: 1666769245}
   sparkEffect: {fileID: 5949477788937152137, guid: 7c11fea280e0ca340862fbbc33be1b9b, type: 3}
   widthLine: 0.01
-  colorLine: 4
   controlPanel: {fileID: 1492689903}
   weldingSound: {fileID: 1700906077}
+  colorLine:
+  - {fileID: 2100000, guid: e7cf910461672fd4aae5448ad4f7c101, type: 2}
+  - {fileID: 2100000, guid: 4d864c28a5344eb46b1051649b2950d4, type: 2}
+  - {fileID: 2100000, guid: d5e0e58c7948c4b4797c2def86650d74, type: 2}
+  - {fileID: 2100000, guid: acd8de054771107499ef4d9e1c0b53e2, type: 2}
+  - {fileID: 2100000, guid: 4ed751b1439c46443a9aaf22669e2664, type: 2}
+  - {fileID: 2100000, guid: dbbac1ef58817f14285d9c401caa9a45, type: 2}
+  - {fileID: 2100000, guid: 1197eb36ae6db194aa4869e5fd6b19f5, type: 2}
 --- !u!120 &1666769245
 LineRenderer:
   serializedVersion: 2
