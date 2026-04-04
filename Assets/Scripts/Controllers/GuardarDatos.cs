@@ -11,6 +11,10 @@ public class GuardarDatos : MonoBehaviour
     [SerializeField] private TMP_Text textosDatos;
     [SerializeField] private Transform contenidoContainer;
     [SerializeField] private GameObject prefabTexto;
+    [SerializeField] private GameObject tutorialTrapecio;
+    [SerializeField] private GameObject tutorialFigL;
+    private Vector3 pos = Vector3.zero;
+    private Vector3[] posTutorial;
     private string filePath;
     private string fileName = "datos_experimento.csv";
     public ExecuteTrajectories trayectoriasEjecutadas;
@@ -35,25 +39,90 @@ public class GuardarDatos : MonoBehaviour
         File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
         Debug.Log("Archivo CSV creado en: " + filePath);
     }
-    
     public void GuardarInformacion()
     {
+        float voltaje = controlValoresPanel.valorDisplay[0].dato;
+        float corriente = controlValoresPanel.valorDisplay[1].dato;
 
-        if (controlValoresPanel.valorDisplay[0].dato > 75f && controlValoresPanel.valorDisplay[0].dato < 85f && controlValoresPanel.valorDisplay[1].dato >= 10f && controlValoresPanel.valorDisplay[1].dato <= 15f)
-            textosDatos.text = "Valor de voltaje de: " + controlValoresPanel.valorDisplay[0].valorTexto.text + " y corriente de:" + controlValoresPanel.valorDisplay[1].valorTexto.text;
+        string voltajeTxt = controlValoresPanel.valorDisplay[0].valorTexto.text;
+        string corrienteTxt = controlValoresPanel.valorDisplay[1].valorTexto.text;
+
+        // Determinar configuración según tutorial activo
+        int puntos = 0;
+        float vMin = 0, vMax = 0, cMin = 0, cMax = 0;
+        //string material = "";
+        posTutorial = null;
+
+        if (tutorialTrapecio.activeSelf)
+        {
+            puntos = 2;
+            vMin = 20; vMax = 26; cMin = 7; cMax = 14;
+            //material = "acero inoxidable";
+            posTutorial = new Vector3[]
+            {
+            new Vector3(0.12f, 0.63f, 0.3f),
+            new Vector3(0.12f, 0.4f, 0.3f)
+            };
+        }
+        else if (tutorialFigL.activeSelf)
+        {
+            puntos = 3;
+            vMin = 24; vMax = 30; cMin = 11; cMax = 18;
+            //material = "aluminio";
+            posTutorial = new Vector3[]
+            {
+            new Vector3(-0.35f, 0.63f, 0.3f),
+            new Vector3(-0.12f, 0.63f, 0.3f),
+            new Vector3(-0.12f, 0.86f, 0.3f)
+            };
+        }
         else
-            textosDatos.text = "Valor de voltaje de: " + controlValoresPanel.valorDisplay[0].valorTexto.text + " y corriente de:" + controlValoresPanel.valorDisplay[1].valorTexto.text +
-                    "\nSe recomienda utilizar valores de: 80 V y 12 A";
+        {
+            puntos = trayectoriasEjecutadas.trajectory.Count;
+            vMin = 20; vMax = 30; cMin = 7; cMax = 18;
+        }
+
+        // Validación de valores
+        bool valoresCorrectos = voltaje > vMin && voltaje < vMax &&
+                                corriente >= cMin && corriente <= cMax;
+
+        textosDatos.text = $"Valor de voltaje de: {voltajeTxt} y corriente de: {corrienteTxt}";
+
+        if (!valoresCorrectos)
+        {
+            /*string recomendacion = material != "" ?
+                $"para el {material} entre: {vMin}V a {vMax}V y {cMin}A a {cMax}A" :
+                $"entre: {vMin}V a {vMax}V y {cMin}A a {cMax}A";*/
+
+            textosDatos.text += $"\nSe recomienda usar valores entre: {vMin}V a {vMax}V y {cMin}A a {cMax}A";
+        }
+
+        // Limpiar contenido anterior
         foreach (Transform contenedor in contenidoContainer)
             Destroy(contenedor.gameObject);
 
-        for (int i = 0; i < trayectoriasEjecutadas.trajectory.Count; i++)
+        // Generar puntos
+        for (int i = 0; i < puntos; i++)
+        {
+            GameObject newText = Instantiate(prefabTexto, contenidoContainer);
+            Vector3 pos = trayectoriasEjecutadas.trajectory[i];
+
+            string texto = $"Punto_{i + 1}: X ({pos.x:F2}), Y ({pos.y:F2}), Z({pos.z:F2})";
+            newText.GetComponent<TMP_Text>().text = texto;
+            if (posTutorial != null)
             {
-                GameObject newText=Instantiate(prefabTexto, contenidoContainer);
-                Vector3 pos = trayectoriasEjecutadas.trajectory[i];
-                newText.GetComponent<TMP_Text>().text = $"Punto_{i+1} = X ({pos.x:F2}), Y ({pos.y:F2}), Z({pos.z:F2})";
+                int index = (i < posTutorial.Length) ? i : i % posTutorial.Length;
+
+                if (Vector3.Distance(pos, posTutorial[index]) >= 0.03f)
+                {
+                    GameObject warningText = Instantiate(prefabTexto, contenidoContainer);
+                    Vector3 refPos = posTutorial[index];
+                    texto = $"Punto de Ref_{i + 1}: X({refPos.x:F2}), Y ({refPos.y:F2}), Z({refPos.z:F2})";
+                    warningText.GetComponent<TMP_Text>().text = texto;
+                }
             }
-        
+
+        }
     }
     public void desactivarMostrarResultados()
     {
@@ -71,8 +140,8 @@ public class GuardarDatos : MonoBehaviour
         for (int i = 0; i < trayectoriasEjecutadas.trajectory.Count; i++)
         {
             //float tiempo = trayectoriasEjecutadas.partialTime[i];
-            Vector3 pos = trayectoriasEjecutadas.trajectory[i];
-            sb.AppendLine($"{i+1}   {pos.x:F4} {pos.y:F4} {pos.z:F4}");
+            pos = trayectoriasEjecutadas.trajectory[i];
+            sb.AppendLine($"{i+1} - {pos.x:F2} {pos.y:F2} {pos.z:F2}");
         }
         sb.AppendLine("TiempoTotalDeEjecucion: ");
         sb.AppendLine($"{trayectoriasEjecutadas.finalTime:F2}");

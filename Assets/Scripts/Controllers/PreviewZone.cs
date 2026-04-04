@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.ProBuilder;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
@@ -42,7 +43,6 @@ public class PreviewZone : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Interactable") || currentPreview != null) return;
-
         string shapeType = GetShapeType(other.gameObject);
         if (!IsValidPlacement(shapeType)) return;
 
@@ -52,11 +52,11 @@ public class PreviewZone : MonoBehaviour
         // Instanciar preview con la rotación correcta desde el inicio
         Quaternion previewRot = GetRotationForType(shapeType);
         currentPreview = Instantiate(previewPrefab, placementPoint.position, previewRot);
-
         currentInteractable = other.GetComponent<XRGrabInteractable>();
+
         if (currentInteractable != null)
             currentInteractable.selectExited.AddListener(OnReleasedInside);
-
+        currentInteractable.gameObject.GetComponent<Rigidbody>().isKinematic = true;
         isInside = true;
     }
 
@@ -71,20 +71,15 @@ public class PreviewZone : MonoBehaviour
             currentPreview.transform.rotation = GetRotationForType(shapeType);
         }
     }
-
     private void OnTriggerExit(Collider other)
     {
         if (!other.CompareTag("Interactable")) return;
-
+        isInside = false;
         if (currentPreview != null) Destroy(currentPreview);
-        if (currentInteractable != null)
-            currentInteractable.selectExited.RemoveListener(OnReleasedInside);
-
+        if (currentInteractable != null) currentInteractable.selectExited.RemoveListener(OnReleasedInside);
         currentPreview = null;
         currentInteractable = null;
-        isInside = false;
     }
-
     private void OnReleasedInside(SelectExitEventArgs args)
     {
         if (!isInside || currentPreview == null || currentInteractable == null) return;
@@ -97,13 +92,12 @@ public class PreviewZone : MonoBehaviour
         GameObject prefabToPlace = GetPrefabByType(shapeType);
         if (prefabToPlace == null) return;
 
-        Instantiate(prefabToPlace, placementPoint.position, finalRotation);
+        currentInteractable.gameObject.transform.position = placementPoint.position;
+        currentInteractable.gameObject.transform.rotation = finalRotation;
 
         if (posicionZona == ZonePosition.Centro)
             figuraCentral = shapeType; // Actualizar quién está en el centro
-
         currentInteractable.selectExited.RemoveListener(OnReleasedInside);
-        Destroy(currentInteractable.gameObject);
         Destroy(currentPreview);
 
         currentInteractable = null;

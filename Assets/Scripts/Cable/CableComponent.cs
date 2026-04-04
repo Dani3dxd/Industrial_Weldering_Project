@@ -21,8 +21,8 @@ public class CableComponent : MonoBehaviour
     [SerializeField] private int verletIterations = 1;
     [SerializeField] private int solverIterations = 1;
 
-    //[Range(0,3)]
-    [SerializeField] private float stiffness = 1f;
+    /*[Range(0,3)]
+    [SerializeField] private float stiffness = 1f;*/
 
     private LineRenderer line;
     private CableParticle[] points;
@@ -41,12 +41,12 @@ public class CableComponent : MonoBehaviour
     /**
 	 * Init cable particles
 	 * 
-	 * Creates the cable particles along the cable length
-	 * and binds the start and end tips to their respective game objects.
+	 * Crea las particulas del cable a lo largo de dos posiciones
+	 * e inicia desde el inicio hasta el final del cable con sus respectivos gamObjects.
 	 */
     void InitCableParticles()
     {
-        // Calculate segments to use
+        // Calcula el segmento a utilizar dependiendo de la longitud del cable y la cantidad de segmentos por unidad
         if (totalSegments > 0)
             segments = totalSegments;
         else
@@ -56,15 +56,13 @@ public class CableComponent : MonoBehaviour
         float initialSegmentLength = cableLength / segments;
         points = new CableParticle[segments + 1];
 
-        // Foreach point
+        // Para cada punto del cable, se crea una nueva particula y se posiciona a lo largo de la direccion del cable dependiendo de su indice
         for (int pointIdx = 0; pointIdx <= segments; pointIdx++)
         {
-            // Initial position
             Vector3 initialPosition = transform.position + (cableDirection * (initialSegmentLength * pointIdx));
             points[pointIdx] = new CableParticle(initialPosition);
         }
 
-        // Bind start and end particles with their respective gameobjects
         CableParticle start = points[0];
         CableParticle end = points[segments];
         start.Bind(this.transform);
@@ -72,7 +70,7 @@ public class CableComponent : MonoBehaviour
     }
 
     /**
-	 * Initialized the line renderer
+	 * Inicializa el line renderer
 	 */
     void InitLineRenderer()
     {
@@ -97,7 +95,7 @@ public class CableComponent : MonoBehaviour
     /**
 	 * Render Cable
 	 * 
-	 * Update every particle position in the line renderer.
+	 * Actualiza cada posicion de las particulas en el LineRenderer.
 	 */
     void RenderCable()
     {
@@ -124,7 +122,7 @@ public class CableComponent : MonoBehaviour
     /**
 	 * Verler integration pass
 	 * 
-	 * In this step every particle updates its position and speed.
+	 * En este paso cada particula actualiza su posicion y velocidad.
 	 */
     void VerletIntegrate()
     {
@@ -138,7 +136,7 @@ public class CableComponent : MonoBehaviour
     /**
 	 * Constrains solver pass
 	 * 
-	 * In this step every constraint is addressed in sequence
+	 * En este paso se actualiza cada restriccion en secuencia
 	 */
     void SolveConstraints()
     {
@@ -156,7 +154,7 @@ public class CableComponent : MonoBehaviour
     #region Solver Constraints
 
     /**
-	 * Distance constraint for each segment / pair of particles
+	 * Distancia de restriccion para cada segmento del cable
 	 **/
     void SolveDistanceConstraint()
     {
@@ -174,7 +172,7 @@ public class CableComponent : MonoBehaviour
     /**
 	 * Distance Constraint 
 	 * 
-	 * This is the main constrains that keeps the cable particles "tied" together.
+	 * Esta es la resticcion principal que mantiene la pasticulas del cable juntas.
 	 */
     void SolveDistanceConstraint(CableParticle particleA, CableParticle particleB, float segmentLength)
     {
@@ -201,7 +199,7 @@ public class CableComponent : MonoBehaviour
     }
 
     /**
-	 * Stiffness constraint
+	 * Restriccion de rigidez para cada segmento del cable
 	 **/
     void SolveStiffnessConstraint()
     {
