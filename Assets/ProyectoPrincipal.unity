@@ -501,7 +501,7 @@ PrefabInstance:
     - target: {fileID: 1321135764338996995, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 21300000, guid: 2779c675a1ad242408814dbba5117341, type: 3}
     - target: {fileID: 1321135764557884551, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -3867,7 +3867,7 @@ PrefabInstance:
     - target: {fileID: 1321135764338996995, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 21300000, guid: 395f60327573ac741835a5ba4d207005, type: 3}
     - target: {fileID: 1321135764557884551, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -3971,7 +3971,7 @@ PrefabInstance:
     - target: {fileID: 8462908634919313066, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_text
       value: "Dir\xEDgete a la mesa de control de la derecha y configura el soldador
-        con los siguientes valores de 80 V y 10 A"
+        con los siguientes valores entre 24-30 V y 11-18 A"
       objectReference: {fileID: 0}
     - target: {fileID: 8462908634919313066, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_HorizontalAlignment
@@ -13885,7 +13885,7 @@ PrefabInstance:
     - target: {fileID: 1321135764338996995, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 21300000, guid: acdb232c0c7e6aa4cbf5eccde660ca92, type: 3}
     - target: {fileID: 1321135764557884551, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -14183,7 +14183,7 @@ PrefabInstance:
     - target: {fileID: 1321135764338996995, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 21300000, guid: e26d1f9bf89d6624780b9d8e2d607aa8, type: 3}
     - target: {fileID: 1321135764557884551, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -22318,7 +22318,7 @@ PrefabInstance:
     - target: {fileID: 1321135764338996995, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 21300000, guid: d6bfb4d7aea3f904482d3887f1dae62b, type: 3}
     - target: {fileID: 1321135764557884551, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -22431,9 +22431,9 @@ PrefabInstance:
       propertyPath: m_text
       value: "Presiona el bot\xF3n \u201CEjecutar trayectoria\u201D, para iniciar
         el movimiento del robot. Al finalizar, el sistema mostrar\xE1 en el panel
-        de informaci\xF3n: el tiempo total de la soldadura, las posiciones registradas,que
-        tan cerca estuvieron tus puntos de la trayectoria correcta y los valores
-        ideales de voltaje y corriente"
+        de informaci\xF3n: el tiempo total de la soldadura, los valores de voltaje,
+        corriente y las posiciones registradas, indicando en caso de que no hayan
+        sido puestos correctamente la cercania de tus puntos con la trayectoria correcta."
       objectReference: {fileID: 0}
     - target: {fileID: 8462908634919313066, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_margin.x
@@ -25910,7 +25910,7 @@ PrefabInstance:
     - target: {fileID: 1321135764338996995, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 21300000, guid: 0cebc251a202a3b4f99c56e1e2d107ef, type: 3}
     - target: {fileID: 1321135764557884551, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -26011,6 +26011,10 @@ PrefabInstance:
       propertyPath: m_NextStep
       value: 
       objectReference: {fileID: 1796158946}
+    - target: {fileID: 8462908634919313065, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8462908634919313066, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_text
       value: "Mueve el efector final hasta la segunda posici\xF3n indicada en la
@@ -26389,7 +26393,7 @@ PrefabInstance:
     - target: {fileID: 1321135764338996995, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 21300000, guid: 98f0645ba92daed49ba8585e4a4e22e0, type: 3}
     - target: {fileID: 1321135764557884551, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -26493,7 +26497,7 @@ PrefabInstance:
     - target: {fileID: 8462908634919313066, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_text
       value: "Dir\xEDgete a la mesa de control de la derecha y configura el soldador
-        con los siguientes valores de 80 V y 10 A"
+        con los siguientes con valores entre 20-26 V y 7-14 A"
       objectReference: {fileID: 0}
     - target: {fileID: 8462908634919313066, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_HorizontalAlignment
@@ -28743,7 +28747,7 @@ PrefabInstance:
     - target: {fileID: 1321135764338996995, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 21300000, guid: 051d477fc399b664dba20ef0fffd6c00, type: 3}
     - target: {fileID: 1321135764557884551, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -31983,7 +31987,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1.5}
+  m_AnchoredPosition: {x: 0.3, y: 1.5}
   m_SizeDelta: {x: 800, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1319612625
@@ -36598,7 +36602,7 @@ PrefabInstance:
     - target: {fileID: 1321135764338996995, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 21300000, guid: 66b92b98fe38d5f4abebfb5bb9b076c2, type: 3}
     - target: {fileID: 1321135764557884551, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -36699,12 +36703,24 @@ PrefabInstance:
       propertyPath: m_NextStep
       value: 
       objectReference: {fileID: 1237616482}
+    - target: {fileID: 8462908634919313064, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -356.2
+      objectReference: {fileID: 0}
     - target: {fileID: 8462908634919313066, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_text
-      value: "Ve al estante de la izquierda y toma un cuadrado y un tri\xE1ngulo,
-        coloca el cuadrado en la parte inferior de la zona de trabajo y el tri\xE1ngulo
-        en la parte superior, formando la figura de una casa como se muestra en la
-        imagen"
+      value: "Ve al estante de la izquierda y toma un cuadrado y un tri\xE1ngulo
+        de acero inoxidable, coloca el cuadrado en la parte superior central de la
+        zona de trabajo y el tri\xE1ngulo a mano derecha de esa zona, formando la
+        figura de un trapecio rect\xE1ngulo como se muestra en la imagen"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8462908634919313066, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
+      propertyPath: m_margin.x
+      value: -23.428604
+      objectReference: {fileID: 0}
+    - target: {fileID: 8462908634919313066, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
+      propertyPath: m_margin.z
+      value: -18.529495
       objectReference: {fileID: 0}
     - target: {fileID: 8462908634919313066, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_HorizontalAlignment
@@ -45698,7 +45714,7 @@ PrefabInstance:
     - target: {fileID: 1321135764338996995, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 21300000, guid: e60b167d65bcbaf42b5cfeffe7c44835, type: 3}
     - target: {fileID: 1321135764557884551, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -45811,9 +45827,13 @@ PrefabInstance:
       propertyPath: m_text
       value: "Presiona el bot\xF3n \u201CEjecutar trayectoria\u201D, para iniciar
         el movimiento del robot. Al finalizar, el sistema mostrar\xE1 en el panel
-        de informaci\xF3n: el tiempo total de la soldadura, las posiciones registradas,que
-        tan cerca estuvieron tus puntos de la trayectoria correcta y los valores
-        ideales de voltaje y corriente"
+        de informaci\xF3n: el tiempo total de la soldadura, los valores de voltaje,
+        corriente y las posiciones registradas, indicando en caso de que no hayan
+        sido puestos correctamente la cercania de tus puntos con la trayectoria correcta."
+      objectReference: {fileID: 0}
+    - target: {fileID: 8462908634919313066, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
+      propertyPath: m_fontSize
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 8462908634919313066, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_margin.x
@@ -45822,6 +45842,14 @@ PrefabInstance:
     - target: {fileID: 8462908634919313066, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_margin.z
       value: -30.673828
+      objectReference: {fileID: 0}
+    - target: {fileID: 8462908634919313066, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
+      propertyPath: m_fontStyle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8462908634919313066, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 8462908634919313066, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_HorizontalAlignment
@@ -48780,7 +48808,7 @@ PrefabInstance:
     - target: {fileID: 1321135764338996995, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 21300000, guid: 4f567dca018a2634fa89801e4aef9e0b, type: 3}
     - target: {fileID: 1321135764557884551, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -48883,9 +48911,10 @@ PrefabInstance:
       objectReference: {fileID: 177602883}
     - target: {fileID: 8462908634919313066, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_text
-      value: Ve al estante de la izquierda y toma tres cuadrados, coloca los cuadrados
-        en la parte superior de la izquierda, la parte inferior y en la parte inferior
-        central de la zona de trabajo, formando la figura, que se observa en la imagen
+      value: Ve al estante de la izquierda y toma tres cuadrados de aluminio, coloca
+        los cuadrados en la parte superior de la izquierda, la parte inferior izquierda
+        y en la parte inferior central de la zona de trabajo, formando la figura,
+        que se observa en la imagen
       objectReference: {fileID: 0}
     - target: {fileID: 8462908634919313066, guid: 6f9a3398f45c39b47a75eba882b98181, type: 3}
       propertyPath: m_HorizontalAlignment
