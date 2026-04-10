@@ -49,6 +49,20 @@ public class ExecuteTrajectories : MonoBehaviour
     }
 
     /// <summary>
+    /// Removes the last movement entry from the trajectory and rotation lists, and decrements the trajectory count.
+    /// </summary>
+    public void RemoveLastMovement()
+    {
+        if (trajectory.Count==0 || rotation.Count == 0) return;
+        
+        int lastIndex = trajectory.Count - 1;
+        trajectory.RemoveAt(lastIndex);
+        rotation.RemoveAt(lastIndex);
+            
+        trajectoryCount--;
+    }
+
+    /// <summary>
     /// When press the button execute the movement trajectories to all positions in the list when there is more than one
     /// </summary>
     public void ExecuteMovement()
@@ -58,7 +72,7 @@ public class ExecuteTrajectories : MonoBehaviour
     }
     IEnumerator AngularAxisMovement()
     {
-        finalTime = 0f;
+        //finalTime = 0f;
         float timeElapsed = 0f;
         int currentTrajectoryIndex = 0;
         float totalTime = 15f * Vector3.Distance(trajectory[currentTrajectoryIndex], trajectory[currentTrajectoryIndex + 1]); // adjust time according to distance between points
@@ -72,7 +86,7 @@ public class ExecuteTrajectories : MonoBehaviour
             if (timeElapsed >= totalTime || Vector3.Distance(axis.transform.localPosition, trajectory[currentTrajectoryIndex + 1]) < 0.001f && Quaternion.Angle(axis.transform.localRotation, Quaternion.Euler(rotation[currentTrajectoryIndex + 1])) < 0.1f)
             {
                 Debug.Log("Tiempo de la trayectoria no."+currentTrajectoryIndex+": "+totalTime);
-                finalTime += totalTime;
+                //finalTime += totalTime;
                 currentTrajectoryIndex++;
                 timeElapsed = 0f;
                 if (currentTrajectoryIndex < trajectoryCount - 1)
@@ -86,5 +100,19 @@ public class ExecuteTrajectories : MonoBehaviour
         }
         panelResults.SetActive(true);
         textoTiempo.text = "Tiempo total de ejecución: " + finalTime.ToString("F2") + " seg \nCantidad de puntos utilizados: " + trajectory.Count;
+    }
+    public void StartTimer()
+    {
+        StartCoroutine(TimerCoroutine());
+    }
+    IEnumerator TimerCoroutine()
+    {
+        finalTime = 0f;
+        while (!panelResults.activeSelf)
+        {
+            finalTime += Time.deltaTime;
+            yield return null;
+        }
+        Debug.Log("Tiempo total de ejecución: " + finalTime.ToString("F2") + " seg");
     }
 }

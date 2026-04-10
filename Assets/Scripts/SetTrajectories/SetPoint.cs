@@ -83,6 +83,21 @@ public class SetPoint : MonoBehaviour
         welderLine.positionCount = 0;
     }
 
+    /// <summary>
+    /// When press the button this function eliminates only the last gameobjects of type sphere
+    /// </summary
+    public void RemoveLastSphere()
+    {
+        if (points.Count == 0) return;
+
+        int lastIndex = points.Count - 1;
+        GameObject.Destroy(points[lastIndex]);
+        points.RemoveAt(lastIndex);
+
+        initLine.positionCount = points.Count;
+        welderLine.positionCount = points.Count;
+    }
+
     public void ExecuteSpark()
     {
         if (points.Count >= 2)
