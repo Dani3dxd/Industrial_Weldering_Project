@@ -61,14 +61,17 @@ public class SetPoint : MonoBehaviour
     /// </summary>
     public void instanceNewObject()
     {
-        newSphere = Instantiate(sphere, endEffector.transform.position, Quaternion.identity); //instance a new object taken the prefab that you load it before with a position and rotation stablished previously
-        points.Add(newSphere); // add a new object at list
-        foreach (var point in points)
-            point.SetActive(drawObject);
-        welderLine.positionCount = points.Count; //stablished the quantity of points created in scene
-        initLine.positionCount = points.Count;
-        for (int index = 0; index < initLine.positionCount; index++)
-            initLine.SetPosition(index, points[index].transform.position); // run the array and position points on stablished positions
+        if (points.Count == 0 || Vector3.Distance(points[points.Count - 1].transform.position, endEffector.transform.position) > 0.001f)
+        {
+            newSphere = Instantiate(sphere, endEffector.transform.position, Quaternion.identity); //instance a new object taken the prefab that you load it before with a position and rotation stablished previously
+            points.Add(newSphere); // add a new object at list
+            foreach (var point in points)
+                point.SetActive(drawObject);
+            welderLine.positionCount = points.Count; //stablished the quantity of points created in scene
+            initLine.positionCount = points.Count;
+            for (int index = 0; index < initLine.positionCount; index++)
+                initLine.SetPosition(index, points[index].transform.position); // run the array and position points on stablished positions
+        }
     }
 
     /// <summary>
@@ -76,11 +79,15 @@ public class SetPoint : MonoBehaviour
     /// </summary>
     public void CleanSpheres()
     {
-        for (int i = 0; i <= points.Count; i++)
+        for (int i = 0; i < points.Count; i++)
             GameObject.Destroy(points[i]);
         points.Clear();
         initLine.positionCount = 0;
         welderLine.positionCount = 0;
+        initLine.enabled = false;
+        welderLine.enabled = false;
+        initLine.enabled = true;
+        initLine.enabled = true;
     }
 
     /// <summary>

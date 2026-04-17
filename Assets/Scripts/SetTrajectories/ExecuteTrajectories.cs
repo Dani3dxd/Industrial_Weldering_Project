@@ -29,11 +29,13 @@ public class ExecuteTrajectories : MonoBehaviour
     /// </summary>
     
     public void ListMovements()
-    {       
-        trajectory.Add(axis.transform.localPosition);
-        rotation.Add(axis.transform.localEulerAngles);
-        
-        trajectoryCount++;
+    {
+        if (trajectory.Count == 0 || Vector3.Distance(trajectory[trajectory.Count - 1], axis.transform.localPosition) > 0.001f)
+        {
+            trajectory.Add(axis.transform.localPosition);
+            rotation.Add(axis.transform.localEulerAngles);
+            trajectoryCount++;
+        }
     }
 
     /// <summary>
