@@ -22,9 +22,34 @@ public class GuardarDatos : MonoBehaviour
 
     void Awake()
     {
+        Debug.Log("PersistentDataPath: " + Application.persistentDataPath);
+        Debug.Log("StreamingAssetsPath: " + Application.streamingAssetsPath);
+        Debug.Log("TemporaryCachePath: " + Application.temporaryCachePath);
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+
+    string folder = "/storage/emulated/0/Documents";
+
+    try
+    {
+        if (!Directory.Exists(folder))
+            Directory.CreateDirectory(folder);
+
+        filePath = Path.Combine(folder, fileName);
+    }
+    catch (System.Exception e)
+    {
+        Debug.LogError("Error creando carpeta: " + e);
+    }
+
+#else
+
         filePath = Path.Combine(Application.persistentDataPath, fileName);
 
-        // Crear archivo con encabezados si no existe
+#endif
+
+        Debug.Log("Ruta seleccionada: " + filePath);
+
         if (!File.Exists(filePath))
         {
             CrearArchivo();
@@ -33,11 +58,20 @@ public class GuardarDatos : MonoBehaviour
 
     void CrearArchivo()
     {
-        StringBuilder sb = new StringBuilder();
-        sb.AppendLine("Indice PosicionX PosicionY PosicionZ");
+        try
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Indice PosicionX PosicionY PosicionZ");
 
-        File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
-        Debug.Log("Archivo CSV creado en: " + filePath);
+            File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
+
+            Debug.Log("Archivo creado: " + filePath);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("ERROR:");
+            Debug.LogError(ex.ToString());
+        }
     }
     public void GuardarInformacion()
     {
@@ -145,9 +179,26 @@ public class GuardarDatos : MonoBehaviour
         }
         sb.AppendLine("TiempoTotalDeEjecucion: ");
         sb.AppendLine($"{trayectoriasEjecutadas.finalTime:F2}");
-        File.AppendAllText(filePath, sb.ToString(), Encoding.UTF8);
-        Debug.Log("Trayectoria guardada en: " + filePath);
-        
+        try
+        {
+            File.AppendAllText(filePath, sb.ToString(), Encoding.UTF8);
+
+            Debug.Log("Trayectoria guardada en: " + filePath);
+
+            trayectoriasEjecutadas.textoTiempo.text = "Datos guardados correctamente";
+
+            textosDatos.text = filePath;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("ERROR GUARDANDO CSV");
+            Debug.LogError(e.ToString());
+
+            trayectoriasEjecutadas.textoTiempo.text = "Error al guardar";
+
+            textosDatos.text = e.Message;
+        }
+
         trayectoriasEjecutadas.textoTiempo.text = "Datos guardados correctamente en:";
         textosDatos.text = filePath;
     }

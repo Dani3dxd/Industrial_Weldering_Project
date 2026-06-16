@@ -12,8 +12,8 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: Unity Technologies
-  productName: XRI Examples
+  companyName: Universidad del Cauca
+  productName: Emulator
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -141,7 +141,7 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: 3.1.2
+  bundleVersion: 3.1
   preloadedAssets:
   - {fileID: 0}
   - {fileID: 0}
@@ -154,6 +154,8 @@ PlayerSettings:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 475465402638252791, guid: fba6072275013e6448e381f83d131b7f, type: 2}
+  - {fileID: -277355099288397310, guid: e60ad326389e9b14e9f7ae2c33703862, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -303,7 +305,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 88200832b3fc0544ba404537a884638d, type: 3}
+      m_Icon: {fileID: 2800000, guid: 7044911a8c1e97940be2c461ef5951f3, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0
