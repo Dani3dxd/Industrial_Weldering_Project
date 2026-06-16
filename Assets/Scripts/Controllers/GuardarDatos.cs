@@ -17,6 +17,7 @@ public class GuardarDatos : MonoBehaviour
     private Vector3[] posTutorial;
     private string filePath;
     private string fileName = "datos_experimento.csv";
+    private int numeroPractica = 1;
     public ExecuteTrajectories trayectoriasEjecutadas;
     public ControladorValoresPanel controlValoresPanel;
 
@@ -61,7 +62,10 @@ public class GuardarDatos : MonoBehaviour
         try
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("Indice PosicionX PosicionY PosicionZ");
+
+            sb.AppendLine("SIMULADOR DE SOLDADURA CON COBOT");
+            sb.AppendLine("============================================");
+            sb.AppendLine();
 
             File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
 
@@ -69,10 +73,10 @@ public class GuardarDatos : MonoBehaviour
         }
         catch (System.Exception ex)
         {
-            Debug.LogError("ERROR:");
             Debug.LogError(ex.ToString());
         }
     }
+
     public void GuardarInformacion()
     {
         float voltaje = controlValoresPanel.valorDisplay[0].dato;
@@ -171,35 +175,55 @@ public class GuardarDatos : MonoBehaviour
         }
 
         StringBuilder sb = new StringBuilder();
+
+        sb.AppendLine("===============================================");
+        sb.AppendLine($"PRACTICA {numeroPractica}");
+        sb.AppendLine($"Fecha: {System.DateTime.Now:dd/MM/yyyy}");
+        sb.AppendLine($"Hora : {System.DateTime.Now:HH:mm:ss}");
+        sb.AppendLine();
+
+        sb.AppendLine("Punto,X,Y,Z");
+
         for (int i = 0; i < trayectoriasEjecutadas.trajectory.Count; i++)
         {
-            //float tiempo = trayectoriasEjecutadas.partialTime[i];
             pos = trayectoriasEjecutadas.trajectory[i];
-            sb.AppendLine($"{i+1} - {pos.x:F2} {pos.y:F2} {pos.z:F2}");
+
+            sb.AppendLine(
+                $"{i + 1}," +
+                $"{pos.x:F3}," +
+                $"{pos.y:F3}," +
+                $"{pos.z:F3}");
         }
-        sb.AppendLine("TiempoTotalDeEjecucion: ");
-        sb.AppendLine($"{trayectoriasEjecutadas.finalTime:F2}");
+
+        sb.AppendLine();
+
+        sb.AppendLine($"Tiempo Total (s),{trayectoriasEjecutadas.finalTime:F2}");
+
+        float voltaje = controlValoresPanel.valorDisplay[0].dato;
+        float corriente = controlValoresPanel.valorDisplay[1].dato;
+
+        sb.AppendLine($"Voltaje (V),{voltaje:F1}");
+        sb.AppendLine($"Corriente (A),{corriente:F1}");
+
+        sb.AppendLine();
+
         try
         {
             File.AppendAllText(filePath, sb.ToString(), Encoding.UTF8);
 
+            numeroPractica++;
+
             Debug.Log("Trayectoria guardada en: " + filePath);
 
             trayectoriasEjecutadas.textoTiempo.text = "Datos guardados correctamente";
-
             textosDatos.text = filePath;
         }
         catch (System.Exception e)
         {
-            Debug.LogError("ERROR GUARDANDO CSV");
             Debug.LogError(e.ToString());
 
             trayectoriasEjecutadas.textoTiempo.text = "Error al guardar";
-
             textosDatos.text = e.Message;
         }
-
-        trayectoriasEjecutadas.textoTiempo.text = "Datos guardados correctamente en:";
-        textosDatos.text = filePath;
     }
 }
