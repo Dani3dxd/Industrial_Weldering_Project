@@ -13,6 +13,7 @@ public class GuardarDatos : MonoBehaviour
     [SerializeField] private GameObject prefabTexto;
     [SerializeField] private GameObject tutorialTrapecio;
     [SerializeField] private GameObject tutorialFigL;
+    [SerializeField] private GameObject objetoIniciar;
     private Vector3 pos = Vector3.zero;
     private Vector3[] posTutorial;
     private string filePath;
@@ -102,7 +103,7 @@ public class GuardarDatos : MonoBehaviour
             new Vector3(0.12f, 0.4f, 0.3f)
             };
         }
-        else if (tutorialFigL.activeSelf)
+        else if (tutorialFigL.activeSelf || objetoIniciar.activeSelf)
         {
             puntos = 3;
             vMin = 24; vMax = 30; cMin = 11; cMax = 18;
