@@ -25,6 +25,7 @@ public class SetPoint : MonoBehaviour
     [SerializeField] private Material[] colorLine; //color of the line
     private List<GameObject> points = new List<GameObject>();
     private GameObject newSphere;
+    public IniciarEscena currentStep;
     private void Start()
     {
         welderLine.material.color = Color.gray;
@@ -34,27 +35,70 @@ public class SetPoint : MonoBehaviour
         sparkEffect = Instantiate(sparkEffect);
         controlPanel.GetComponentInChildren<ControladorValoresPanel>().valorDisplay[0].valorSlider.onValueChange.AddListener( val =>
             {
-                widthLine = Mathf.InverseLerp(0f, 120f, val*120f) * 0.04f;
+                widthLine = Mathf.InverseLerp(0f, 40f, val*40f) * 0.04f;
                 welderLine.startWidth = widthLine; 
                 welderLine.endWidth = widthLine;
                 initLine.startWidth = widthLine-0.008f;
                 initLine.endWidth = widthLine-0.008f;
             }
         );
-        controlPanel.GetComponentInChildren<ControladorValoresPanel>().valorDisplay[1].valorSlider.onValueChange.AddListener( val =>
+
+        controlPanel.GetComponentInChildren<ControladorValoresPanel>().valorDisplay[1].valorSlider.onValueChange.AddListener(val =>
+        {
+            float voltaje = controlPanel.GetComponentInChildren<ControladorValoresPanel>().valorDisplay[0].dato;
+            float corriente = controlPanel.GetComponentInChildren<ControladorValoresPanel>().valorDisplay[1].dato;
+
+            bool parametrosCorrectos = false;
+
+            switch (currentStep.currentStep)
             {
-                float valueAmpLine = val * 20f;
-                int index = Mathf.FloorToInt( Mathf.InverseLerp(0f,20f,valueAmpLine) * colorLine.Length );
-                index = Mathf.Clamp( index, 0, colorLine.Length - 1 );
-                welderLine.material = colorLine[index];
-                // 1 Violeta → Azul
-                // 2 Azul → Cian
-                // 3 Cian → Verde
-                // 4 Verde → Amarillo
-                // 5 Amarillo → Naranja
-                // 6 Naranja → Rojo
+                // Acero inoxidable
+                case 0:
+                    parametrosCorrectos = voltaje >= 20 && voltaje <= 26 &&
+                                          corriente >= 80 && corriente <= 140;
+                    break;
+
+                // Acero al carbono
+                case 1:
+                    parametrosCorrectos = voltaje >= 20 && voltaje <= 26 &&
+                                          corriente >= 90 && corriente <= 160;
+                    break;
+
+                // Aluminio
+                case 2:
+                    parametrosCorrectos = voltaje >= 24 && voltaje <= 30 &&
+                                          corriente >= 110 && corriente <= 180;
+                    break;
             }
-        );
+
+            if (parametrosCorrectos)
+            {
+                // Verde (soldadura correcta)
+                welderLine.material = colorLine[1]; // Ajusta el índice al material verde de tu arreglo
+            }
+            else
+            {
+                // Rojo (soldadura incorrecta)
+                welderLine.material = colorLine[2];
+            }
+        });
+
+
+
+        //controlPanel.GetComponentInChildren<ControladorValoresPanel>().valorDisplay[1].valorSlider.onValueChange.AddListener( val =>
+        //    {
+        //        float valueAmpLine = val * 200f;
+        //        int index = Mathf.FloorToInt( Mathf.InverseLerp(0f,200f,valueAmpLine) * colorLine.Length );
+        //        index = Mathf.Clamp( index, 0, colorLine.Length - 1 );
+        //        welderLine.material = colorLine[index];
+        //        // 1 Violeta → Azul
+        //        // 2 Azul → Cian
+        //        // 3 Cian → Verde
+        //        // 4 Verde → Amarillo
+        //        // 5 Amarillo → Naranja
+        //        // 6 Naranja → Rojo
+        //    }
+        //);
     }
     /// <summary>
     /// This function instantiate a new object when it pressed the button at scene

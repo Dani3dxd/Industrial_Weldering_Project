@@ -11,7 +11,8 @@ public class IniciarEscena : MonoBehaviour
     public GameObject panel;
     public GameObject[] steps;
     private List<GameObject> figurasInstanciadas = new List<GameObject>();
-    private int currentStep = 0;
+    public int currentStep = 0;
+    public int indicepublic = 0;
 
 
     public void CambiarEstadoObjetos()
@@ -24,6 +25,7 @@ public class IniciarEscena : MonoBehaviour
         if (activacion)
         {
             int indiceAleatorio = Random.Range(0, posicionesSocketInteractor.Length);
+            indiceAleatorio = indicepublic;
 
             for (int i = 0; i < posicionesSocketInteractor.Length; i++)
             {
