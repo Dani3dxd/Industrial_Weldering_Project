@@ -5,69 +5,80 @@ using UnityEngine;
 public class IniciarEscena : MonoBehaviour
 {
     [SerializeField] private GameObject[] objetosActivables;
-    [SerializeField] private GameObject[] objetosPosicionables;
     [SerializeField] private GameObject[] posicionesSocketInteractor;
-    private GameObject newFigure;
+    [SerializeField] private GameObject[] objetosDuplicables;
     private bool activacion = true;
     public GameObject panel;
     public GameObject[] steps;
-    
+    private List<GameObject> figurasInstanciadas = new List<GameObject>();
     private int currentStep = 0;
+
+
     public void CambiarEstadoObjetos()
     {
+        MostrarPasoAleatorio();
+
         foreach (GameObject objeto in objetosActivables)
             objeto.SetActive(!activacion);
-        foreach (GameObject objeto in posicionesSocketInteractor)
-            objeto.SetActive(activacion);
-        panel.SetActive(activacion);
-        
-        if(activacion)
-            newFigure = Instantiate(objetosPosicionables[0], new Vector3(0.30f, 0.92f, 2.48f), Quaternion.identity);
+
+        if (activacion)
+        {
+            int indiceAleatorio = Random.Range(0, posicionesSocketInteractor.Length);
+
+            for (int i = 0; i < posicionesSocketInteractor.Length; i++)
+            {
+                posicionesSocketInteractor[i].SetActive(i == indiceAleatorio);
+            }
+        }
         else
-            Destroy(newFigure);
+        {
+            foreach (GameObject objeto in posicionesSocketInteractor)
+            {
+                objeto.SetActive(false);
+            }
+        }
+
+        panel.SetActive(activacion);
+
+        if (activacion)
+        {
+            figurasInstanciadas.Clear();
+
+            foreach (GameObject objeto in objetosDuplicables)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    GameObject copia = Instantiate(
+                        objeto,
+                        objeto.transform.position,
+                        objeto.transform.rotation);
+
+                    figurasInstanciadas.Add(copia);
+                }
+            }
+        }
+        else
+        {
+            foreach (GameObject figura in figurasInstanciadas)
+            {
+                if (figura != null)
+                    Destroy(figura);
+            }
+
+            figurasInstanciadas.Clear();
+        }
 
         activacion = !activacion;
+        
 
     }
-    public void CambiarPosicionObjetos()
+ 
+    private void MostrarPasoAleatorio()
     {
-        float x, y, z;
-        if (!activacion)
-        {
-            y = 0.90f; z = 2.40f;
-            foreach (GameObject objeto in objetosPosicionables)
-            {
-                objeto.transform.position = new Vector3(-1.02f, y, z);
-                y += 0.04f; z += 0.02f;
-            }
-        }
-        else
-        {
-            x = -1.35f; y = 0.74f;
-            foreach (GameObject objeto in objetosPosicionables)
-            {
-                objeto.transform.position = new Vector3(x, y, 1.49f);
-                x -= 0.1f; y += 0.04f;
-            }
-        }
-    }
+        if (steps.Length == 0)
+            return;
 
-    public void NextStep()
-    {
-        currentStep++;
-
-        if (currentStep >= steps.Length)
-            currentStep = 0;
-
-        ShowStep(currentStep);
-    }
-
-    public void PreviousStep()
-    {
-        currentStep--;
-
-        if (currentStep < 0)
-            currentStep = steps.Length - 1; 
+        currentStep = Random.Range(0, steps.Length);
 
         ShowStep(currentStep);
     }
@@ -79,4 +90,6 @@ public class IniciarEscena : MonoBehaviour
             steps[i].SetActive(i == index);
         }
     }
+
 }
+
